@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Create new paste!</title>
+<meta name="robots" content="all">
+<meta name="keywords" content="paste, bin, pastebin, nopaste">
+<meta name="description" content="A pastebin for your stuff.">
+<style>
+body {
+	margin: 10px;
+	background: #fff;
+}
+.mono {
+	font-family: monospace;
+}
+.form {
+	position: relative;
+	width: 98%;
+}
+.form .text {
+	display: block;
+	width: 100%;
+	height: 300px;
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+.form .submit {
+	position: absolute;
+	left: 0;
+}
+.form .syntax {
+	position: absolute;
+	right: 0;
+}
+</style>
+</head>
+<body>
+<div class="mono">
+
+<form class="form" action="/" method="post" onsubmit="paste_onsubmit()">
+	<textarea class="text" name="text"></textarea>
+	<div class="submit">
+		<input class="mono" type="submit" value="submit">
+	</div>
+	<div class="syntax">
+		syntax:
+		<select class="mono" name="syntax">
+		<?php foreach ( $syntax_list as $i => $syntax ) : ?>
+			<?php
+			$selected = ( $syntax_default == $i ) ? "selected" : "";
+			echo "<option value=\"{$i}\" {$selected}>{$syntax["name"]}</option>";
+			?>
+		<?php endforeach; ?>
+		</select>
+	</div>
+</form>
+
+</div>
+</body>
+</html>

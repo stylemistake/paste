@@ -1,0 +1,23 @@
+# .gitignore
+
+## ------------------------------------
+##  Codebase directories, where .gitkeep file is effective to keep
+##  directories tracked by git.
+##  Note: .gitkeep rule must be the last one in this section.
+## ------------------------------------
+
+paste
+
+## Include gitkeep files to keep folders tracked
+!**/.gitkeep
+
+
+## ------------------------------------
+##  Normally ignored rubbish
+## ------------------------------------
+
+.idea/**
+.ftpquota
+error_log
+**/error_log
+cgi-bin/**

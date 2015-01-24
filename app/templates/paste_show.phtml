@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>View paste <?php echo $uid ?></title>
+<meta name="robots" content="all">
+<meta name="keywords" content="paste, bin, pastebin, nopaste">
+<meta name="description" content="Paste <?php echo $uid ?> in <?php echo $syntax ?>. A pastebin for your stuff.">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
+<style>
+body {
+    margin: 10px;
+    background: #fff;
+}
+a, a:active, a:visited {
+    color: #000;
+    text-decoration: none;
+}
+a:hover {
+    color: #000;
+    text-decoration: underline;
+}
+.mono {
+	font-family: monospace;
+}
+.wrap {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+.text {
+    margin-top: 0;
+    font-size: 14px;
+}
+.text code {
+    background: #fff;
+    margin: 0; padding: 3px;
+    overflow: visible;
+}
+</style>
+<script type="text/javascript">
+function linkifyNode(node) {
+    var i, ii,
+        _len = node.childNodes.length;
+        texts = [];
+    for (i = 0; i < _len; i += 1) {
+        if (node.childNodes[i].nodeType == document.ELEMENT_NODE) {
+            linkifyNode(node.childNodes[i]);
+        }
+    }
+    for (i = 0; i < _len; i += 1) {
+        if (node.childNodes[i].nodeType == document.TEXT_NODE) {
+            texts.push(node.childNodes[i]);
+        }
+    }
+    for (i = 0, ii = texts.length; i < ii; i += 1) {
+        if (texts[i].nodeType == document.ELEMENT_NODE) {
+            linkifyNode(texts[i]);
+        } else if (texts[i].nodeType == document.TEXT_NODE) {
+            while (true) {
+                var text = texts[i].nodeValue,
+                    regex = /\bhttps?:\/\/[a-z0-9\.\-_](:\d+)?[^ \n\t<>()\[\]]*/i,
+                    match = regex.exec(text);
+                if (!match) {
+                    break;
+                }
+                var leadingNode = document.createTextNode(text.substr(0, match.index)),
+                    anchor = document.createElement("a");
+                node.replaceChild(leadingNode, texts[i]);
+                anchor.setAttribute('target', '_blank');
+                anchor.href = match[0];
+                anchor.appendChild(document.createTextNode(match[0]));
+                node.insertBefore(anchor, leadingNode.nextSibling);
+                var trailing = document.createTextNode(
+                    text.substr(match.index + match[0].length)
+                );
+                node.insertBefore(trailing, anchor.nextSibling);
+                texts[i] = trailing;
+            }
+        }
+    }
+}
+function linkify(el) {
+    el.normalize();
+    linkifyNode(el);
+    return el;
+}
+</script>
+<body>
+<div>
+
+<?php
+$wrap = false;
+if ( $syntax == "plain" ) {
+	$syntax = "hljs nohighlight";
+    $wrap = true;
+}
+?>
+<pre id="code" class="text <?php echo $wrap ? "wrap" : "" ?>"><code class="<?php echo $syntax ?>"><?php echo htmlentities( $text, ENT_COMPAT, "UTF-8" ); ?></code></pre>
+<script type="text/javascript">
+hljs.initHighlightingOnLoad();
+linkify(document.getElementById('code'));
+</script>
+
+</div>
+</body>
+</html>
